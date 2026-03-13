@@ -29,4 +29,4 @@ jobs:
 
       - name: Link Human to Agent
         run: |
-          node scripts/linkHumanToAgent.js --challenge '{"name":"cCinela","description":"cCinela AI Agent"}'
+          node scripts/linkHumanToAgent.js --to cCinela --challenge '{"name":"cCinela","description":"cCinela AI Agent"}'
