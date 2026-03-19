@@ -1,4 +1,4 @@
-name: Billions Verified Agent
+name: Billions Verify (Fixed)
 
 on:
   workflow_dispatch:
@@ -7,32 +7,29 @@ jobs:
   verify:
     runs-on: ubuntu-latest
 
+    # 🔥 INI YANG FIX ERROR NODE 20
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node (latest)
+      - name: Setup Node (NEW)
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: '22'
 
-      # Install clawhub CLI
       - name: Install ClawHub
         run: npm install -g clawhub
 
-      # Install Billions identity skill
-      - name: Install Verified Identity Skill
+      - name: Install Skill
         run: npx clawhub@latest install verified-agent-identity
 
-      # Create identity (wallet + DID)
       - name: Create Identity
         run: node scripts/createNewEthereumIdentity.js
 
-      # Generate verification link (IMPORTANT STEP)
-      - name: Link Human to Agent
+      - name: Link Human
         run: |
           node scripts/manualLinkHumanToAgent.js \
-          --challenge '{"name":"My Agent","description":"Verified via GitHub Action"}'
+          --challenge '{"name":"My Agent","description":"Verified via GitHub"}'
