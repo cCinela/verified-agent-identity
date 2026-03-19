@@ -1,41 +1,34 @@
-name: Verify Human Identity
+name: Verified Agent Identity
 
 on:
   workflow_dispatch:
-    inputs:
-      agent_name:
-        description: 'cCinela'
-        required: true
-        default: 'cCinela'
-      agent_description:
-        description: 'cCinela'
-        required: true
-        default: 'cCinela AI Agent'
 
 jobs:
   verify:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout Repo
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Step 1 - Install ClawHub skill
-  run: npx clawhub@latest install github:cCinela/verified-agent-identity
+      - name: Install Dependencies
+        run: npm install
 
-      - name: Install script dependencies
-        run: |
-          cd scripts
-          npm install
+      # OPTIONAL: Install ClawHub skill (skip kalau error)
+      - name: Install ClawHub Skill (optional)
+        continue-on-error: true
+        run: npx clawhub@latest install verified-agent-identity || true
 
-      - name: Step 2 - Create new Ethereum Identity
+      - name: Create New Ethereum Identity
         run: node scripts/createNewEthereumIdentity.js
 
-      - name: Step 3 - Link Human to Agent
+      - name: Link Human to Agent
         run: |
-          node scripts/manualLinkHumanToAgent.js --challenge '{"name": "cCinela", "description": "cCinela AI Agent"}'
+          node scripts/linkHumanToAgent.js \
+          --to "github-action" \
+          --challenge '{"name":"My Agent","description":"CI Agent"}'
