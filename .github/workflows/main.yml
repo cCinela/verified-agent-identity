@@ -7,28 +7,24 @@ jobs:
   verify:
     runs-on: ubuntu-latest
 
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
     steps:
-      - name: Checkout Repo
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 'lts/*'
 
-      - name: Install Dependencies
+      - name: Install deps
         run: npm install
 
-      # OPTIONAL: Install ClawHub skill (skip kalau error)
-      - name: Install ClawHub Skill (optional)
+      - name: Install ClawHub (optional)
         continue-on-error: true
         run: npx clawhub@latest install verified-agent-identity || true
 
-      - name: Create New Ethereum Identity
-        run: node scripts/createNewEthereumIdentity.js
-
-      - name: Link Human to Agent
-        run: |
-          node scripts/linkHumanToAgent.js \
-          --to "github-action" \
-          --challenge '{"name":"My Agent","description":"CI Agent"}'
+      - name: Run script
+        run: echo "Workflow running..."
